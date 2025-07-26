@@ -19,9 +19,9 @@
   "scripts": {
     "clean": "rm -rf dist",
     "dev": "tsc --watch",
-    "build": "tsc && npm run prepack",
+    "build": "tsc",
     "preview": "vite preview",
-    "prepack": "publint",
+    "prepack": "npm run build && publint",
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint ."
   },
