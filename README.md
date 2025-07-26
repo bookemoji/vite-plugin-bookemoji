@@ -6,7 +6,7 @@ It exists to create virtual files for the bookemoji package to access from user-
 
 ## Key Detail
 
-In order for this plugin to work yyou need to set it/it's library as excluded:
+In order for this plugin to work you need to set it/it's library as excluded:
 
 ```diff
 

@@ -184,23 +184,10 @@ export default function bookEmojiPlugin(options?: BookEmojiPluginOptions): Plugi
 
           files.forEach((f) => log("debug", "- ", f.name));
 
-          // Generate an array of dynamic import expressions.
-          // Each `import()` call will be resolved by Vite's normal module resolution.
-          // The `/* @vite-ignore */` comment is a Vite magic comment that tells Vite
-          // to not warn about dynamic import paths that cannot be statically analyzed.
-          // This is useful here because the paths are generated dynamically.
-          // const importStatements = normalizedFiles.map((file) => `import(/* @vite-ignore */ '/${file}')`);
-
-          // Return the content as a JavaScript module string.
-          // This module exports an array named `modules` containing the promises
-          // returned by the dynamic import calls.
           return createExportStatements(
             bookEmojiConfig?.base ?? "",
             files.map((f) => `./${f.path}`),
           );
-          // `export const base = ""; export const stories = {
-          // ${importStatements.join(",\n")},
-          // ;`;
         } catch (error) {
           console.error(plugin_prefix, `Error globbing files:`, error);
           return createExportStatements(bookEmojiConfig?.base ?? "", []);
@@ -213,10 +200,6 @@ export default function bookEmojiPlugin(options?: BookEmojiPluginOptions): Plugi
 }
 
 function createExportStatements(base: string, files: string[]) {
-  // Normalize file paths to use forward slashes, which is standard for web paths
-  // and ensures consistency across different operating systems (Windows vs. Unix-like).
-  // const normalizedFiles = files.map((file) => file);
-  // const entries: string[] = [];
   const entries: string[] = files.map((file) => `"${file}": import(/* @vite-ignore */ '${file}'), `);
 
   const _base: string = `export const base = "${base}";`;
@@ -236,7 +219,7 @@ function createExportStatements(base: string, files: string[]) {
 
     const loadPromises = Array.from(Object.entries(map)).map(([key, loader]) => {
       return loader.then((mod) => {
-        record[key] = mod.default ?? mod;
+        record[key] = mod;
       });
     });
     
